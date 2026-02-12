@@ -1,0 +1,25 @@
+Factory method is yet another creational method.
+
+whenever we want to create an object based on some conditions like (value of param passed,
+ or object passed) then we've to write if else conditions, which violates
+ S (SRP) and O (OCP) of SOLID principles.
+In order to prevent these violation, so that our code remains cleaner, more readable
+and more maintainable, we use factory for creation of objects.
+
+
+
+There are mainly three types of factory.
+
+1. Simple Factory : For creating Objects using parameters etc.
+(can be done using a static method, so that we don't have to create Object of that Factory Class itself).
+example : PlatformFactory.getPlatformByName();
+
+2. Factory Method : When creation of objects is linked with the object reference itself, then we
+create a method at that class itself to return the object whenever it is called.
+ex: getUIComponentFactory, which gives the Object of either AndroidUIComponentFactory or
+IOSUIComponentFactory based on the android and ios is the type of the platform.
+
+3. Abstract Factory : whenever we've multiple such objects that are to be created based on some logics,
+then instead of overwhelming the main classes, we create abstract factory whose responsibility is to
+create multiple type of objects based on different kind of logic.
+ex: AndroidUIComponentFactory ( which creates both button, and menu).
