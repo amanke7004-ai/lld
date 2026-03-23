@@ -1,10 +1,7 @@
 package com.multithreading;
 
 import java.util.Arrays;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class Main {
 
@@ -55,14 +52,88 @@ public class Main {
 
     // Merge sort using multi-threading
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
-        int[] arr = new int[]{9, 7, 9, 8, 2, 6, 0, 3, 9, 2};
-        int left = 0;
-        int right = arr.length-1;
-        ExecutorService mergeExecutorService = Executors.newCachedThreadPool();
-        MergeSort mergeSort = new MergeSort(mergeExecutorService, arr, left, right);
-        Future<int[]> futureAns = mergeExecutorService.submit(mergeSort);
-        int[] sortedArr = futureAns.get();
-        System.out.println("Sorted Arr : " + Arrays.toString(sortedArr));
+//    public static void main(String[] args) throws ExecutionException, InterruptedException {
+//        int[] arr = new int[]{9, 7, 9, 8, 2, 6, 0, 3, 9, 2};
+//        int left = 0;
+//        int right = arr.length-1;
+//        ExecutorService mergeExecutorService = Executors.newCachedThreadPool();
+//        MergeSort mergeSort = new MergeSort(mergeExecutorService, arr, left, right);
+//        Future<int[]> futureAns = mergeExecutorService.submit(mergeSort);
+//        int[] sortedArr = futureAns.get();
+//        System.out.println("Sorted Arr : " + Arrays.toString(sortedArr));
+//    }
+
+
+    // Quick sort using multi-threading
+
+//    public static void main(String[] args) throws Exception{
+//        System.out.println("Program started...");
+//        int[] arr = new int[]{9, 7, 9, 8, 2, 6, 0, 3, 9, 2};
+//        ExecutorService executorService = Executors.newCachedThreadPool();
+//        Future<int[]> sortingTask = executorService.submit(new QuickSort(arr, 0, arr.length-1, executorService));
+//        sortingTask.get();
+//        System.out.println("Sorted Arr :: " + Arrays.toString(arr));
+//        executorService.shutdown();
+//    }
+
+
+    // Thread join
+//    public static void main(String[] args) throws Exception{
+//        System.out.println("Program started...");
+//        Thread t1 = new Thread(()->{
+//            try {
+//                Thread.sleep(2000);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//            System.out.println("Task 1 completed");
+//        });
+//        Thread t2 = new Thread(()->{
+//            try {
+//                Thread.sleep((2000));
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//            System.out.println("Task 2 completed");
+//        });
+//
+//        t1.start();
+//        t2.start();
+//        t1.join();
+//        t2.join();// writing it causes main thread to wait until t1 and t2 finish execution.
+//        System.out.println("Program finished...");//main thread finished execution;
+//    }
+
+    public static void main(String[] args) throws Exception{
+
+        // similar case of awaitTermination when using ExecutorService
+
+        System.out.println("Program started...");
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        Future<Integer> task1 = executorService.submit(()->{
+            try{
+                Thread.sleep(4000);
+                System.out.println("Task1 finished");
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return -1;
+        });
+        Future<Integer> task2 = executorService.submit(()->{
+            try{
+                Thread.sleep(4000);
+                System.out.println("Task2 finished");
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return -1;
+        });
+        executorService.shutdown();// stops taking new tasks and completes ongoing tasks
+        boolean allTasksFinished = executorService.awaitTermination(5, TimeUnit.SECONDS);// will wait for 5 seconds for
+        //since we've only waited for 5 seconds, it will return false as task2 was not able to complete in the 5 seconds time.
+        if(!allTasksFinished){
+            System.out.println("Not all tasks finished");
+        }
+        System.out.println("Program finished...");
     }
 }
