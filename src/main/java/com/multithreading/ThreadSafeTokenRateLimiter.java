@@ -8,9 +8,9 @@ class TokenBasedRateLimiter {
     private int tokens;
     private long lastRefillTime;
     private int capacity;
-    private int refillRatePerSecond;
+    private long refillRatePerSecond;
     
-    public TokenBasedRateLimiter(int capacity, int refillRatePerSecond){
+    public TokenBasedRateLimiter(int capacity, long refillRatePerSecond){
         this.capacity = capacity;
         this.tokens = capacity;
         this.refillRatePerSecond = refillRatePerSecond;
@@ -27,13 +27,14 @@ class TokenBasedRateLimiter {
         }
     }
     private void refill(){
-        int timeElapsedInSeconds = (int)(System.currentTimeMillis()-lastRefillTime/1000);
+        int timeElapsedInSeconds = (int)(System.currentTimeMillis()-lastRefillTime)/1000;
         int tokensToAdd = 0;
         if(timeElapsedInSeconds > 0){
-            tokensToAdd = timeElapsedInSeconds * refillRatePerSecond;
+            tokensToAdd = (int)(timeElapsedInSeconds * refillRatePerSecond);
+            this.tokens = Math.min(capacity, this.tokens + tokensToAdd);
+            lastRefillTime = System.currentTimeMillis();
         }
-        this.tokens = Math.min(capacity, this.tokens + tokensToAdd);
-        lastRefillTime = System.currentTimeMillis();
+
     }
 }
 
@@ -47,6 +48,7 @@ public class ThreadSafeTokenRateLimiter{
         };
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         for(int i = 0; i <= 200; i++) {
+            Thread.sleep(100);
             executorService.execute(task);
         }
         executorService.shutdown();
