@@ -1,4 +1,4 @@
-package com.designPatterns.builder;
+package com.example.lld.designPatterns.builder;
 
 public class Student {
     private int age;

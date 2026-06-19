@@ -9,10 +9,6 @@ public class Client {
 
     public static void main(String[] args) {
 
-
-
-
-
         BankAPI bankAPI = new IciciBankAdapter();
         int currBalance = bankAPI.checkBalance();
         System.out.println("Opening Balance : " + currBalance);
